@@ -175,15 +175,66 @@ scoring logic would fix the silent bug identified during evaluation.
 
 ## 9. Personal Reflection
 
-Building this project made it clear that recommendation systems are not
-just about math — they are deeply shaped by the data they run on. The
-scoring formula itself was symmetric and fair, but the catalog's uneven
-genre distribution meant some users were structurally disadvantaged
-before a single score was calculated. That was unexpected and eye-opening.
+**What was your biggest learning moment during this project?**
 
-The experiment of removing mood from the scoring was also revealing. It
-showed that even a feature worth only 16 points out of 100 can be the
-difference between recommendations that feel right and ones that feel
-generic. Every weight is a design decision with real consequences for
-real listeners, and small changes can quietly change who the system
-serves well and who it ignores.
+The biggest learning moment was discovering that a recommender system can
+be mathematically fair and still produce biased results. The scoring
+formula treated every song equally — it just measured distance from the
+user's preferences. But because the catalog had 3 lofi songs and only 1
+metal song, lofi listeners consistently got better recommendations than
+metal listeners. The bias was not in the algorithm. It was in the data.
+That distinction — algorithm fairness vs data fairness — is something I
+will think about every time I interact with a real recommendation system
+from now on.
+
+**How did using AI tools help you, and when did you need to double-check them?**
+
+Copilot helped enormously with the parts of the project that were
+repetitive or structural — generating the CSV rows, writing docstrings,
+formatting output, and suggesting scoring formulas. It saved a significant
+amount of time and consistently produced code that worked on the first try.
+
+However, there were moments where I had to slow down and verify what it
+gave me. When Copilot suggested adding UserProfile fields, it did not
+automatically check whether the test file would still pass — I had to
+think through that myself and make sure the new fields had default values
+so existing tests would not break. Copilot also flagged a bug in the OOP
+Recommender.recommend() method that I had not noticed — it was returning
+songs without scoring them at all. That was a case where the AI caught
+something I missed, which was humbling and useful.
+
+The overall pattern was: Copilot is excellent at generating and explaining
+code, but the human still needs to understand what the code does and why,
+especially when pieces connect to each other across multiple files.
+
+**What surprised you about how simple algorithms can still "feel" like recommendations?**
+
+What surprised me most was how quickly the output started feeling
+intuitive. The formula is just subtraction and multiplication — there is
+no machine learning, no neural network, no training data. Yet when a Chill
+Lofi user got Library Rain and Midnight Coding at the top, it genuinely
+felt like a good recommendation. When the Deep Intense Rock user got Storm
+Runner at 97.72, it felt obvious and correct.
+
+That made me realize that a lot of what feels "smart" about a recommender
+is really just careful feature selection and thoughtful weighting. Spotify
+is vastly more complex than VibeFinder 1.0, but the core intuition —
+find songs that are close to what you like — is the same. The complexity
+comes from having millions of songs, implicit feedback from listening
+behavior, and collaborative signals from other users. The foundation is
+surprisingly simple.
+
+**What would you try next if you extended this project?**
+
+The first thing I would do is expand the catalog to at least 50 songs with
+a minimum of 5 per genre. Almost every problem I encountered — Gym Hero
+appearing everywhere, metal users having no backup options, edge cases
+producing low scores — would be significantly reduced with more data.
+
+After that I would replace the likes_acoustic boolean with a float
+preference, add partial credit for related genres like indie pop counting
+as a near-match for pop, and implement the OOP Recommender.recommend()
+method with actual scoring logic to fix the silent bug. Finally I would
+explore adding a simple diversity rule so the same artist cannot appear
+more than once in the top 5 — a small change that would make the
+recommendations feel much more varied and useful.
